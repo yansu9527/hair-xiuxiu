@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>头发秀秀 - AI发质分析</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 首页 -->
+    <div id="home-page" class="page active">
+      <div class="hero">
+        <div class="hero-icon">✨</div>
+        <h1 class="hero-title">头发秀秀</h1>
+        <p class="hero-subtitle">AI智能分析 · 专业护理建议</p>
+      </div>
+
+      <div class="features">
+        <div class="feature-item">
+          <div class="feature-icon">📸</div>
+          <div class="feature-text">拍照分析</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔬</div>
+          <div class="feature-text">智能诊断</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💡</div>
+          <div class="feature-text">护理建议</div>
+        </div>
+      </div>
+
+      <div class="guide-box">
+        <h3>📸 拍照小贴士</h3>
+        <ul>
+          <li>在自然光或柔和灯光下拍摄</li>
+          <li>头发占画面主要部分</li>
+          <li>避免过度曝光或过暗</li>
+          <li>可以拍头皮近景或整体发质</li>
+        </ul>
+      </div>
+
+      <button class="btn-primary" onclick="showUploadPage()">
+        <span class="btn-icon">📷</span>
+        开始检测
+      </button>
+
+      <div class="privacy-tip">
+        🔒 照片仅用于AI分析，分析后立即删除，不会保存
+      </div>
+    </div>
+
+    <!-- 上传页面 -->
+    <div id="upload-page" class="page">
+      <div class="page-header">
+        <h2>上传头发照片</h2>
+        <p>请确保光线充足，头发清晰可见</p>
+      </div>
+
+      <div class="upload-area" id="upload-area">
+        <input type="file" id="file-input" accept="image/*" capture="environment" style="display: none;">
+        
+        <div class="upload-placeholder" id="upload-placeholder">
+          <div class="upload-icon">📷</div>
+          <p>点击拍照或选择照片</p>
+          <p class="upload-hint">支持拍照或从相册选择</p>
+        </div>
+
+        <img id="preview-image" class="preview-image" style="display: none;">
+      </div>
+
+      <div class="upload-actions" id="upload-actions" style="display: none;">
+        <button class="btn-secondary" onclick="resetUpload()">重新选择</button>
+        <button class="btn-primary" onclick="startAnalysis()">开始分析</button>
+      </div>
+
+      <div class="upload-buttons" id="upload-buttons">
+        <button class="btn-primary" onclick="takePhoto()">
+          <span class="btn-icon">📷</span> 拍照
+        </button>
+        <button class="btn-secondary" onclick="selectFromAlbum()">
+          <span class="btn-icon">🖼️</span> 从相册选择
+        </button>
+      </div>
+
+      <button class="btn-text" onclick="showHomePage()">← 返回首页</button>
+    </div>
+
+    <!-- 分析中页面 -->
+    <div id="analysis-page" class="page">
+      <div class="analyzing">
+        <div class="scan-container">
+          <img id="analyzing-image" class="analyzing-image">
+          <div class="scan-line"></div>
+        </div>
+
+        <div class="analysis-status">
+          <h3 id="status-title">正在分析中...</h3>
+          <p id="status-desc">AI正在识别您的头发特征</p>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0%</div>
+
+        <div class="analysis-steps">
+          <div class="step active" data-step="1">
+            <div class="step-dot"></div>
+            <span>图像识别</span>
+          </div>
+          <div class="step" data-step="2">
+            <div class="step-dot"></div>
+            <span>特征分析</span>
+          </div>
+          <div class="step" data-step="3">
+            <div class="step-dot"></div>
+            <span>生成报告</span>
+          </div>
+        </div>
+
+        <div class="tip-box" id="analysis-tip">
+          💡 健康的头皮应该是淡粉色或肉色的
+        </div>
+      </div>
+    </div>
+
+    <!-- 结果页面 -->
+    <div id="result-page" class="page">
+      <div class="result-header">
+        <div class="result-badge">
+          <span>✨</span> 分析报告
+        </div>
+        <p class="result-time" id="result-time"></p>
+      </div>
+
+      <div class="score-card">
+        <div class="score-header">
+          <span>综合健康评分</span>
+          <span class="confidence-tag" id="confidence-tag">置信度 85%</span>
+        </div>
+        <div class="score-circle">
+          <span class="score-number" id="score-number">4</span>
+          <span class="score-total">/5</span>
+        </div>
+        <div class="score-stars" id="score-stars">
+          <span class="star filled">★</span>
+          <span class="star filled">★</span>
+          <span class="star filled">★</span>
+          <span class="star filled">★</span>
+          <span class="star">★</span>
+        </div>
+        <p class="score-evaluate" id="score-evaluate">比较健康，注意日常护理即可</p>
+      </div>
+
+      <div class="result-card">
+        <h3>📊 分析结果</h3>
+        <div class="result-item">
+          <span class="result-label">发质类型</span>
+          <span class="result-value"><span class="tag" id="hair-type">中性</span></span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">头皮状态</span>
+          <span class="result-value"><span class="tag tag-success" id="scalp-state">健康</span></span>
+        </div>
+        <p class="result-desc" id="result-desc">您的头皮整体健康，发质状态良好，继续保持当前的护理习惯。</p>
+      </div>
+
+      <div class="suggestion-card">
+        <h3>💡 专属护理建议</h3>
+        
+        <div class="suggestion-item" id="suggestion-wash">
+          <div class="suggestion-icon">🚿</div>
+          <div class="suggestion-content">
+            <h4>洗发建议</h4>
+            <p>建议2-3天洗一次头，使用温和平衡型洗发水即可。</p>
+          </div>
+        </div>
+
+        <div class="suggestion-item" id="suggestion-care">
+          <div class="suggestion-icon">🧴</div>
+          <div class="suggestion-content">
+            <h4>护理建议</h4>
+            <p>保持常规护理即可，每周1次发膜护理。</p>
+          </div>
+        </div>
+
+        <div class="suggestion-item" id="suggestion-diet">
+          <div class="suggestion-icon">🥗</div>
+          <div class="suggestion-content">
+            <h4>饮食建议</h4>
+            <p>保持均衡饮食，多摄入蛋白质、维生素和矿物质。</p>
+          </div>
+        </div>
+
+        <div class="suggestion-item" id="suggestion-lifestyle">
+          <div class="suggestion-icon">😴</div>
+          <div class="suggestion-content">
+            <h4>生活习惯</h4>
+            <p>保持规律作息和健康生活方式。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        ⚠️ 免责声明：本分析结果仅供参考，不能替代专业医疗诊断。
+      </div>
+
+      <button class="btn-primary" onclick="restart()">重新检测</button>
+    </div>
+  </div>
+
+  <script src="js/analyzer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
